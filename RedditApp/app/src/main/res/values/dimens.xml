@@ -1,0 +1,12 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="root_padding">15dp</dimen>
+    <dimen name="root_padding_half">7.5dp</dimen>
+    <dimen name="icon_margin">3dp</dimen>
+    <dimen name="upvote_margin">15dp</dimen>
+    <dimen name="subbredit_textsize">12sp</dimen>
+    <dimen name="author_textsize">12sp</dimen>
+    <dimen name="title_textsize">16sp</dimen>
+    <dimen name="comment_textsize">14sp</dimen>
+    <dimen name="items_margin">5dp</dimen>
+</resources>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#F4F4F4"
+    android:paddingLeft="@dimen/root_padding"
+    android:paddingRight="@dimen/root_padding"
+    android:paddingTop="@dimen/root_padding_half"
+    android:paddingBottom="@dimen/root_padding_half"
+    android:layout_marginBottom="@dimen/items_margin">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+        <TextView
+            android:id="@+id/TWtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/root_padding"
+            android:layout_weight="50"
+            android:fontFamily="@font/verdana"
+            android:text="German Shepherd is taking the final test before becoming a military dog."
+            android:textSize="@dimen/title_textsize" />
+
+        <ImageView
+            android:id="@+id/IWthumbnail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="12"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            tools:srcCompat="@tools:sample/avatars" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/root_padding"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_outline_mode_comment_24" />
+
+        <TextView
+            android:id="@+id/TWcomments"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/icon_margin"
+            android:fontFamily="@font/verdana"
+            android:text="170"
+            android:textSize="@dimen/comment_textsize" />
+
+        <ImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/upvote_margin"
+            android:src="@drawable/ic_upvotes" />
+
+        <TextView
+            android:id="@+id/TWupvotes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/verdana"
+            android:text="126K"
+            android:textSize="@dimen/comment_textsize" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/TWauthor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/root_padding"
+
+        android:fontFamily="@font/verdana"
+
+        android:gravity="start"
+        android:text="Posted by u/Funfic_Galore1"
+        android:textSize="@dimen/author_textsize"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingBottom="@dimen/root_padding"
+        android:id="@+id/constraintLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/TWsubreddit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+
+            android:fontFamily="@font/verdana_bold"
+            android:text="r/WolvesAreBigYo"
+            android:textSize="@dimen/subbredit_textsize"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+
+        <TextView
+            android:id="@+id/TWtime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/verdana"
+            android:textSize="@dimen/author_textsize"
+            android:text=" 47 min ago"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
