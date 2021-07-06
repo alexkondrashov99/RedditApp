@@ -131,14 +131,16 @@ private fun saveImage(image: Bitmap,imageFileName:String,activity:FeedNetworkDis
     if (success) {
         val imageFile = File(storageDir, imageFileName)
         savedImagePath = imageFile.getAbsolutePath()
+        var fOut: OutputStream? = null
         try {
-            val fOut: OutputStream = FileOutputStream(imageFile)
+            fOut = FileOutputStream(imageFile)
             image.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
-            fOut.close()
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        //Toast.makeText(this, "IMAGE SAVED", Toast.LENGTH_LONG).show() // to make this working, need to manage coroutine, as this execution is something off the main thread
+        finally{
+            fOut?.close()
+        }
     }
     return savedImagePath
 }
