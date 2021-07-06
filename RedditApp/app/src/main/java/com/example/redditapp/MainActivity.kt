@@ -16,6 +16,7 @@ import java.io.File
 
 
 const val fetchingDataSize = 10
+const val maxDataSize = 50
 val fetchingDataTime = REDDIT_T.HOUR
 
 var isLoading = false;
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity(),FeedNetworkDisplayer,FeedDatabaseDispla
         nestedScrollView.setOnScrollChangeListener( NestedScrollView.OnScrollChangeListener
         { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             if(scrollY>= v.getChildAt(0).measuredHeight - v.measuredHeight)
-                if(dataList.size < 50){
+                if(dataList.size < maxDataSize){
                     progressBar.visibility = View.VISIBLE
                     val after = getRedditAfterPeferences(this)
                     if(after != null)
