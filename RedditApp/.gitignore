@@ -1,15 +1,51 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# svn
+*.svn*
+
+# built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated GUI files
+*/R.java
+
+# generated folder
+bin
+gen
+
+# local
 local.properties
+g
+proguard_logs/
+
+# log files
+log*.txt
+
+# archives
+*.gz
+*.tar
+*.zip
+
+# eclipse
+*.metadata
+*.settings
+*.prefs
+
+#idea
+*.idea
+*.iml
+out/
+
+# Gradle files
+.gradle/
+build/
+gradlew.bat
+
+*output.json
+
+smartcropperlib/.externalNativeBuild/
