@@ -1,0 +1,6 @@
+package com.example.data.datasource.redditpostdataimpl
+
+import com.example.data.datasource.redditpostdatainterface.RedditPostDataRemoteDataSource
+
+class RedditPostDataDataRemoteDataSourceImpl:RedditPostDataRemoteDataSource {
+}
