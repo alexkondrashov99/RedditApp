@@ -25,6 +25,8 @@ const val imageDirectory = "/images"
 
 
 
+
+
 const val json_title = "title"
 const val json_author = "author"
 const val json_created_utc = "created_utc"
@@ -163,6 +165,7 @@ fun fetchRedditData(limit: Int, t:REDDIT_T, count:Int = 0, before: String = "", 
         .build()
         .create(RedditRequest::class.java)
     val url = getRequestURL(limit,t,count,before,after)
+
     GlobalScope.launch(Dispatchers.IO){
         try{
             jsonResponse = api.getRedditTop(url)
