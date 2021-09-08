@@ -1,19 +1,11 @@
-package com.example.data.datasource.redditpostdatainterface
+package com.example.data.datasource.redditpostdatasourceinterface
 
 import com.example.domain.models.AfterInfo
 import com.example.domain.models.RedditPost
+import com.example.domain.models.REDDIT_T
 
 interface RedditPostRemoteDataSource {
 
-    enum class REDDIT_T(val value:String){
-        HOUR("hour"),
-        DAY("day"),
-        WEEK("week"),
-        MONTH("month"),
-        YEAR("year"),
-        ALL("all")
-    }
-
-    suspend fun fetchRedditPostList(limit: Int, t:REDDIT_T, count:Int, before: String, after: AfterInfo): List<RedditPost>
-    suspend fun getAfterInfo(): AfterInfo?
+    suspend fun fetchRedditPostList(limit: Int, t: REDDIT_T, count:Int, before: String, after: AfterInfo): FetchedData
+    data class FetchedData(val redditPostList: List<RedditPost>, val afterInfo: AfterInfo)
 }

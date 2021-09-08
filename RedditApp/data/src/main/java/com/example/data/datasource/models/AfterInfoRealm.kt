@@ -1,13 +1,15 @@
 package com.example.data.datasource.models
 
 import com.example.domain.models.AfterInfo
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
-data class AfterInfoData (val after:String)
+open class AfterInfoRealm (@PrimaryKey var after:String = ""): RealmObject()
 
 
-fun AfterInfo.mapToData():AfterInfoData{
-    return AfterInfoData(after)
+fun AfterInfo.mapToRealm():AfterInfoRealm{
+    return AfterInfoRealm(after)
 }
-fun AfterInfoData.mapToDomain(): AfterInfo {
+fun AfterInfoRealm.mapToDomain(): AfterInfo {
     return AfterInfo(after)
 }

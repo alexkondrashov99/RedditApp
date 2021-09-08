@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.domain.models.RedditPost
 import com.example.redditapp.api.BASE_URL
 import com.example.redditapp.api.RedditData
 
@@ -28,7 +29,7 @@ private fun getTimeDifferenceString(created_utc:Long):String{
     }else return "$resultSeconds sec ago"
 }
 
-class RedditAdapter(val redditData: Array<RedditData>) :
+class RedditAdapter(val redditData: Array<RedditPost>) :
     RecyclerView.Adapter<RedditAdapter.ViewHolder>() {
 
 
@@ -72,9 +73,17 @@ class RedditAdapter(val redditData: Array<RedditData>) :
         viewHolder.twAuthor.text = "Posted by u/" + redditData[position].author
         viewHolder.twTitle.text = redditData[position].title
         viewHolder.twSubreddit.text = redditData[position].subreddit
-        if (redditData[position].thumbnail != null){
-            viewHolder.iwThumbnail.setImageBitmap(redditData[position].thumbnail)
-            viewHolder.iwThumbnail.visibility = View.VISIBLE
+
+//        if (redditData[position].thumbnail != null){
+//            /*
+//            viewHolder.iwThumbnail.setImageBitmap(redditData[position].thumbnail)
+//            viewHolder.iwThumbnail.visibility = View.VISIBLE
+//            */
+//        }
+//        else viewHolder.iwThumbnail.visibility = View.GONE
+
+        if (redditData[position].thumbnailURL != "self"){
+
         }
         else viewHolder.iwThumbnail.visibility = View.GONE
 

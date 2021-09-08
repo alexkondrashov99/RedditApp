@@ -1,12 +1,13 @@
 package com.example.data.datasource.redditpostdatasourceimpl
 
-import com.example.data.datasource.redditpostdatainterface.RedditPostRemoteDataSource
-import com.example.data.datasource.redditpostdatainterface.RedditPostRemoteDataSource.REDDIT_T
+import com.example.data.datasource.redditpostdatasourceinterface.RedditPostRemoteDataSource
 import android.util.Log
 import com.example.data.Utils
 import com.example.domain.models.AfterInfo
+import com.example.domain.models.REDDIT_T
 import com.example.domain.models.RedditPost
 
+import com.example.data.datasource.redditpostdatasourceinterface.*
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -37,10 +38,10 @@ class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
         .build()
 
     private val redditPostListService = retrofit.create(RedditPostService::class.java)
-    private var after: AfterInfo? = null
+
 
     //to build request url
-    private fun getRequestURL(limit: Int, t:REDDIT_T, count:Int = 0, before: String = "", after:String = ""):String {
+    private fun getRequestURL(limit: Int, t: REDDIT_T, count:Int = 0, before: String = "", after:String = ""):String {
         val sb = StringBuilder(BASE_URL)
         sb.append("""/top.json?""")
         sb.append("t=${t.value}")
@@ -63,11 +64,11 @@ class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
         count: Int,
         before: String,
         afterInfo: AfterInfo
-    ): List<RedditPost>  = withContext(Dispatchers.Default) {
+    ): RedditPostRemoteDataSource.FetchedData = withContext(Dispatchers.Default) {
 
         var redditPostDataList:List<RedditPost> = ArrayList() //empty list
         val url = getRequestURL(limit,t,count,before,afterInfo.after)//preparing URL
-
+        var after = AfterInfo("")
         try {
             //fetching from WEB...
             val jsonResponse = redditPostListService.getRedditPostTopList(url)
@@ -78,19 +79,16 @@ class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
             after = AfterInfo(jsonResponse["data"]
                 .asJsonObject["after"]
                 .toString()
-                .trim('"'))
+                .trim('"')) ?: AfterInfo("")
         }
         catch (e: Exception) {
             Log.e("Main","Error: ${e.message}")
         }
 
         /*return*/
-        redditPostDataList
+        RedditPostRemoteDataSource.FetchedData(redditPostDataList,after)
     }
 
-    override suspend fun getAfterInfo(): AfterInfo? {
-        return after
-    }
 }
 
 interface RedditPostService {
@@ -98,7 +96,7 @@ interface RedditPostService {
     suspend fun getRedditPostTopList(@Url url: String?): JsonObject
 }
 
-private fun JsonObject.toRedditPostList():List<RedditPost> {
+private fun JsonObject.toRedditPostList(): List<RedditPost> {
     val byteList: List<Byte> = ArrayList()
     val count = this["data"].asJsonObject["children"].asJsonArray.size();
     val dataList = ArrayList<RedditPost>()
@@ -116,9 +114,9 @@ private fun JsonObject.toRedditPostList():List<RedditPost> {
 
 
         var imgByteArray:ByteArray? = null
-        if(data[json_thumbnail_width].toString() != "null") {
-            imgByteArray = Utils.getByteArrayFromURL(thumbnailURL)
-        }
+//        if(data[json_thumbnail_width].toString() != "null") {
+//            imgByteArray = Utils.getByteArrayFromURL(thumbnailURL)
+//        }
 
         var imagePath:String = ""
 //            var imageBitmap:Bitmap? = null
@@ -138,6 +136,7 @@ private fun JsonObject.toRedditPostList():List<RedditPost> {
     return dataList
 
 }
+
 
 //TODO(replace, reuse this about saving Bitmaps)
 /*

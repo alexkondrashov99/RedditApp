@@ -1,4 +1,4 @@
-package com.example.domain.usecase
+package com.example.domain.models
 
 enum class REDDIT_T(val value:String){
     HOUR("hour"),

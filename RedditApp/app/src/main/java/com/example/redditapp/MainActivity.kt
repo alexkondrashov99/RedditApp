@@ -96,10 +96,9 @@ class MainActivity : AppCompatActivity(),FeedNetworkDisplayer,FeedDatabaseDispla
         progressBar.visibility = View.GONE
         recyclerView.visibility = View.VISIBLE
         dataList = data
-        redditAdapter = RedditAdapter(dataList.toTypedArray())
+        //redditAdapter = RedditAdapter(dataList.toTypedArray())
         recyclerView.adapter = redditAdapter
         isLoading = false
-
     }
 
     override fun getParentContext(): Context {

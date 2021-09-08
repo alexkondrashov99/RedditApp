@@ -1,91 +1,67 @@
 package com.example.data.repository
 
 
-import com.example.data.datasource.models.AfterInfoData
-import com.example.data.datasource.models.RedditPostData
-import com.example.data.datasource.redditpostdatainterface.RedditPostDataLocalDataSource
-import com.example.data.datasource.redditpostdatainterface.RedditPostDataRemoteDataSource
-import com.example.data.datasource.redditpostdatainterface.RedditPostDataRemoteDataSource.REDDIT_T
+import com.example.data.datasource.redditpostdatasourceinterface.RedditPostLocalDataSource
+import com.example.data.datasource.redditpostdatasourceinterface.RedditPostRemoteDataSource
+
 import com.example.domain.models.AfterInfo
 import com.example.domain.models.RedditPost
 import com.example.domain.repository.RedditPostRepository
+import com.example.domain.models.REDDIT_T
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 
 class RedditPostRepositoryImpl (
-    private val localDataSource: RedditPostDataLocalDataSource,
-    private val remoteDataSource: RedditPostDataRemoteDataSource
+    private val localDataSource: RedditPostLocalDataSource,
+    private val remoteDataSource: RedditPostRemoteDataSource
 ) : RedditPostRepository {
 
-    private val fetchingDataSize = 10
-    private val fetchingDataTime = REDDIT_T.HOUR
-    private val fetchingCount = 0
-    private val fetchingBefore = ""
-
-    override suspend fun getRedditPostList(isRefresh: Boolean): List<RedditPost> {
-        var redditPostDataList: List<RedditPostData>
-        if(isRefresh) {
-            val fetchingAfterInfo = getRedditAfterInfo() ?: AfterInfo("")
-
-            //map AfterInfo to AfterInfoData
-            val fetchingAfterInfoData = fetchingAfterInfo.mapToData()
-
-            redditPostDataList = remoteDataSource.fetchRedditPostList(
-                limit = fetchingDataSize,
-                t = fetchingDataTime,
-                count = fetchingCount,
-                before = fetchingBefore,
-                after = fetchingAfterInfoData
-            )
-
-            //saving fetched data to local database, saving bitmaps to /images
-            redditPostDataList = localDataSource.refreshRedditPostList(redditPostDataList)
-            return redditPostDataList.map { it.mapToDomain() }
-        }
-        else {
-            redditPostDataList = localDataSource.getRedditPostList()
-            return redditPostDataList.map { it.mapToDomain() }
-        }
+    companion object {
+        // For Singleton instantiation
+        @Volatile private var instance: RedditPostRepository? = null
+        fun getInstance(redditPostLocalDataSource: RedditPostLocalDataSource, redditPostRemoteDataSource: RedditPostRemoteDataSource ) =
+            instance ?: synchronized(this) {
+                instance ?: RedditPostRepositoryImpl(redditPostLocalDataSource, redditPostRemoteDataSource).also { instance = it }
+            }
     }
 
-    override suspend fun setRedditAfterInfo(after: AfterInfo) {
-        TODO("Not yet implemented")
+    override suspend fun fetchRemoteRedditPostList(limit: Int, t: REDDIT_T, count:Int, before: String, after: AfterInfo) {
+        val fetchedData = remoteDataSource.fetchRedditPostList(limit, t, count, before, after)
+        val redditPostDataList: List<RedditPost> = fetchedData.redditPostList
+        val afterInfo: AfterInfo = fetchedData.afterInfo
+
+        //saving fetched data to local database
+        localDataSource.refreshRedditPostList(redditPostDataList)
+        localDataSource.setRedditAfterInfo(afterInfo)
     }
 
-    override suspend fun getRedditAfterInfo(): AfterInfo? {
-        TODO("Not yet implemented")
+    override suspend fun updateRedditPostList(limit: Int, t: REDDIT_T, count:Int, before: String, after: AfterInfo) {
+        val fetchedData = remoteDataSource.fetchRedditPostList(limit, t, count, before, after)
+        val redditPostDataList: List<RedditPost> = fetchedData.redditPostList
+        val afterInfo: AfterInfo = fetchedData.afterInfo
+
+        //saving fetched data to local database
+        localDataSource.updateRedditPostList(redditPostDataList)
+        localDataSource.setRedditAfterInfo(afterInfo)
     }
-}
-fun RedditPostData.mapToDomain(): RedditPost{
-    return RedditPost(
-        title,
-        author,
-        createdUTC,
-        numComments,
-        url,
-        subreddit,
-        upvotes,
-        thumbnailURL,
-        thumbnail,
-        thumbnailPath
-    )
-}
-fun RedditPost.mapToData(): RedditPostData{
-    return RedditPostData(
-        title,
-        author,
-        createdUTC,
-        numComments,
-        url,
-        subreddit,
-        upvotes,
-        thumbnailURL,
-        thumbnail,
-        thumbnailPath
-    )
+
+    override fun observeRedditPostList(): Flow<List<RedditPost>> {
+        return localDataSource.observeRedditPost()
+    }
+
+    override fun observeRedditAfterInfo(): Flow<AfterInfo> {
+        return localDataSource.observeAfterInfo()
+    }
+
+    override suspend fun getRedditAfterInfo(): AfterInfo {
+        return localDataSource.getRedditAfterInfo()
+    }
+
+    override suspend fun getRedditPostList(): List<RedditPost> {
+        return localDataSource.getRedditPostList()
+    }
+
 }
 
-fun AfterInfo.mapToData():AfterInfoData{
-    return AfterInfoData(after)
-}
-fun AfterInfoData.mapToDomain():AfterInfo{
-    return AfterInfo(after)
-}
+
