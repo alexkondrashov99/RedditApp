@@ -15,6 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.toFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
@@ -67,6 +68,7 @@ class RedditPostLocalDataSourceImpl(): RedditPostLocalDataSource {
 
             val realmInst = Realm.getDefaultInstance()
             realmInst.executeTransaction { realm ->
+                redditPostCounter = realm.where(RedditPostRealm::class.java).findAll().sort("id",Sort.ASCENDING).last()?.id ?: 0
                 //save data to RedditPost table
                 redditPostDataList.forEach { someData ->
                     val realmObj = someData.mapToRealm()
@@ -117,17 +119,11 @@ class RedditPostLocalDataSourceImpl(): RedditPostLocalDataSource {
                     someData.firstOrNull()?.mapToDomain() ?: AfterInfo("")}
         )
     }.flowOn(RealmThread.dispatcher)
-
-
 }
-
 
 private object RealmThread {
     private val threadR = HandlerThread("RealmThread")
     private val handler = Handler(getThread().looper)
-
-    val scheduler: Scheduler
-        get() = AndroidSchedulers.from(getThread().looper)
 
     private fun getThread(): HandlerThread {
         if (!threadR.isAlive) threadR.start()

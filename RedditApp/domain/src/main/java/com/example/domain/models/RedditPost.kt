@@ -9,8 +9,6 @@ data class RedditPost (
     val subreddit: String,
     val upvotes: Int,
     val thumbnailURL: String,
-    val thumbnail: ByteArray?,
-    val thumbnailPath: String
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -26,11 +24,6 @@ data class RedditPost (
         if (subreddit != other.subreddit) return false
         if (upvotes != other.upvotes) return false
         if (thumbnailURL != other.thumbnailURL) return false
-        if (thumbnail != null) {
-            if (other.thumbnail == null) return false
-            if (!thumbnail.contentEquals(other.thumbnail)) return false
-        } else if (other.thumbnail != null) return false
-        if (thumbnailPath != other.thumbnailPath) return false
 
         return true
     }
@@ -44,8 +37,6 @@ data class RedditPost (
         result = 31 * result + subreddit.hashCode()
         result = 31 * result + upvotes
         result = 31 * result + thumbnailURL.hashCode()
-        result = 31 * result + (thumbnail?.contentHashCode() ?: 0)
-        result = 31 * result + thumbnailPath.hashCode()
         return result
     }
 }

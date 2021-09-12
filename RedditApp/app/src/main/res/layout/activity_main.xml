@@ -2,10 +2,10 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
 
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -17,24 +17,28 @@
         android:backgroundTint="@color/teal_200"
         app:srcCompat="@drawable/baseline_autorenew_24"
         tools:ignore="VectorDrawableCompat" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/reddit_post"/>
+                tools:listitem="@layout/reddit_post" />
+
             <ProgressBar
-                android:layout_gravity="center"
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/progressBar"/>
+                android:layout_gravity="center" />
         </LinearLayout>
 
 

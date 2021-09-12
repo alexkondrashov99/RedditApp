@@ -3,6 +3,7 @@ package com.example.data.datasource.redditpostdatasourceimpl
 import com.example.data.datasource.redditpostdatasourceinterface.RedditPostRemoteDataSource
 import android.util.Log
 import com.example.data.Utils
+import com.example.data.Utils.getBitmapFromURL
 import com.example.domain.models.AfterInfo
 import com.example.domain.models.REDDIT_T
 import com.example.domain.models.RedditPost
@@ -58,6 +59,7 @@ class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
         return sb.toString();
     }
 
+    @Throws(java.net.UnknownHostException::class)
     override suspend fun fetchRedditPostList(
         limit: Int,
         t: REDDIT_T,
@@ -69,7 +71,6 @@ class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
         var redditPostDataList:List<RedditPost> = ArrayList() //empty list
         val url = getRequestURL(limit,t,count,before,afterInfo.after)//preparing URL
         var after = AfterInfo("")
-        try {
             //fetching from WEB...
             val jsonResponse = redditPostListService.getRedditPostTopList(url)
             //mapping  JSON to RedditPostData
@@ -80,11 +81,6 @@ class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
                 .asJsonObject["after"]
                 .toString()
                 .trim('"')) ?: AfterInfo("")
-        }
-        catch (e: Exception) {
-            Log.e("Main","Error: ${e.message}")
-        }
-
         /*return*/
         RedditPostRemoteDataSource.FetchedData(redditPostDataList,after)
     }
@@ -97,7 +93,6 @@ interface RedditPostService {
 }
 
 private fun JsonObject.toRedditPostList(): List<RedditPost> {
-    val byteList: List<Byte> = ArrayList()
     val count = this["data"].asJsonObject["children"].asJsonArray.size();
     val dataList = ArrayList<RedditPost>()
     val jsonArr = this["data"].asJsonObject["children"].asJsonArray
@@ -110,62 +105,18 @@ private fun JsonObject.toRedditPostList(): List<RedditPost> {
         val url = data[json_url].toString().trim('"')
         val upvotes = data[json_upvotes].toString().toInt()
         val subreddit = data[json_subreddit].toString().trim('"')
-        val thumbnailURL = data[json_thumbnail].toString().trim('"')
+        var thumbnailURL = data[json_thumbnail].toString().trim('"')
 
+        if(getBitmapFromURL(thumbnailURL) == null) {
+            thumbnailURL = "null"
+        }
 
-        var imgByteArray:ByteArray? = null
-//        if(data[json_thumbnail_width].toString() != "null") {
-//            imgByteArray = Utils.getByteArrayFromURL(thumbnailURL)
-//        }
-
-        var imagePath:String = ""
-//            var imageBitmap:Bitmap? = null
-//            if(data[json_thumbnail_width].toString() != "null"){
-//                imageBitmap = getBitmapFromURL(thumbnailURL)
-//                if(imageBitmap != null){
-//                    val imgName = getImageNameFromURL(thumbnailURL)
-//                    val imagePathNullable = saveImage(imageBitmap,imgName,activity)
-//                    if(imagePathNullable != null){
-//                        imagePath = imagePathNullable
-//                    }
-//                }
-//            }
-        val rData = RedditPost(title,author,createdUTC,numComments,url,subreddit,upvotes,thumbnailURL,imgByteArray,imagePath)
+        val rData = RedditPost(title,author,createdUTC,numComments,url,subreddit,upvotes,thumbnailURL)
         dataList.add(rData)
     }
     return dataList
 
 }
-
-
-//TODO(replace, reuse this about saving Bitmaps)
-/*
-    private fun saveImage(image: Bitmap,imageFileName:String): String? {
-        var savedImagePath: String? = null
-        val storageDir = File(
-            activity.getParentContext().applicationInfo.dataDir + imageDirectory
-        )
-        var success = true
-        if (!storageDir.exists()) {
-            success = storageDir.mkdirs()
-        }
-        if (success) {
-            val imageFile = File(storageDir, imageFileName)
-            savedImagePath = imageFile.getAbsolutePath()
-            var fOut: OutputStream? = null
-            try {
-                fOut = FileOutputStream(imageFile)
-                image.compress(Bitmap.CompressFormat.JPEG, 100, fOut)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            finally{
-                fOut?.close()
-            }
-        }
-        return savedImagePath
-    }
- */
 
 
 

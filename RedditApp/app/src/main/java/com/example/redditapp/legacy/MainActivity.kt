@@ -1,4 +1,4 @@
-package com.example.redditapp
+package com.example.redditapp.legacy
 
 
 import android.content.Context
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.redditapp.*
 import com.example.redditapp.api.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
@@ -20,7 +21,7 @@ const val maxDataSize = 50
 val fetchingDataTime = REDDIT_T.HOUR
 
 var isLoading = false;
-class MainActivity : AppCompatActivity(),FeedNetworkDisplayer,FeedDatabaseDisplayer
+class MainActivity : AppCompatActivity(),FeedNetworkDisplayer, FeedDatabaseDisplayer
 {
 
     lateinit var progressBar: ProgressBar

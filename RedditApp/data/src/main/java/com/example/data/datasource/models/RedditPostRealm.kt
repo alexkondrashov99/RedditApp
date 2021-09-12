@@ -15,17 +15,12 @@ open class RedditPostRealm(
     var subreddit: String = "",
     var upvotes: Int = 0,
     var thumbnailURL: String = "",
-    var thumbnail: RealmList<Byte>? = null, //Убрать нахуй
-    var thumbnailPath: String = ""
 ): RealmObject()
 
 
 fun RedditPost.mapToRealm(): RedditPostRealm{
 
-    val thumbnailByteList = RealmList<Byte>()
-    thumbnail?.forEach {
-        it?.run { thumbnailByteList.add(this)}
-    }
+
     return RedditPostRealm(
         0,
         title,
@@ -36,8 +31,6 @@ fun RedditPost.mapToRealm(): RedditPostRealm{
         subreddit,
         upvotes,
         thumbnailURL,
-        thumbnailByteList,
-        thumbnailPath
     )
 }
 fun RedditPostRealm.mapToDomain(): RedditPost {
@@ -50,7 +43,5 @@ fun RedditPostRealm.mapToDomain(): RedditPost {
         subreddit,
         upvotes,
         thumbnailURL,
-        thumbnail?.toByteArray(),
-        thumbnailPath
     )
 }

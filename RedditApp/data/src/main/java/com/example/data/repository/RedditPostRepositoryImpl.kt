@@ -11,6 +11,7 @@ import com.example.domain.models.REDDIT_T
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import java.lang.Exception
 
 class RedditPostRepositoryImpl (
     private val localDataSource: RedditPostLocalDataSource,
@@ -40,6 +41,9 @@ class RedditPostRepositoryImpl (
         val fetchedData = remoteDataSource.fetchRedditPostList(limit, t, count, before, after)
         val redditPostDataList: List<RedditPost> = fetchedData.redditPostList
         val afterInfo: AfterInfo = fetchedData.afterInfo
+
+//        if(redditPostDataList.isEmpty())
+//            throw Exception("0")
 
         //saving fetched data to local database
         localDataSource.updateRedditPostList(redditPostDataList)
