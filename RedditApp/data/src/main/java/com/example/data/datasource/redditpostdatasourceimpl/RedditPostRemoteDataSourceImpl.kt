@@ -79,7 +79,7 @@ class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
 }
 
 
-private fun JsonObject.toRedditPostList(): List<RedditPost> {
+internal fun JsonObject.toRedditPostList(): List<RedditPost> {
     val count = this["data"].asJsonObject["children"].asJsonArray.size();
     val dataList = ArrayList<RedditPost>()
     val jsonArr = this["data"].asJsonObject["children"].asJsonArray
