@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Query
 import retrofit2.http.Url
 
 
@@ -31,33 +32,21 @@ const val json_thumbnail_height = "thumbnail_height"
 
 const val BASE_URL = "https://www.reddit.com"
 
+interface RedditPostService {
+    @GET("/top.json?/")
+    suspend fun getRedditPostTopList(
+        @Query("limit")  limit: Int,
+        @Query("t")  t: String,
+        @Query("after")  after: String
+    ): JsonObject
+}
+
 class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
-
-    private val redditPostListService = retrofit.create(RedditPostService::class.java)
-
-
-    //to build request url
-    private fun getRequestURL(limit: Int, t: REDDIT_T, count:Int = 0, before: String = "", after:String = ""):String {
-        val sb = StringBuilder(BASE_URL)
-        sb.append("""/top.json?""")
-        sb.append("t=${t.value}")
-
-        if(limit>0)
-            sb.append("&limit=$limit")
-        if(count!=0 && count > 0)
-            sb.append("&count=$count")
-        if(!before.isEmpty())
-            sb.append("&before=$before")
-        if(!after.isEmpty())
-            sb.append("&after=$after")
-
-        return sb.toString();
-    }
 
     @Throws(java.net.UnknownHostException::class)
     override suspend fun fetchRedditPostList(
@@ -68,29 +57,27 @@ class RedditPostRemoteDataSourceImpl: RedditPostRemoteDataSource {
         afterInfo: AfterInfo
     ): RedditPostRemoteDataSource.FetchedData = withContext(Dispatchers.Default) {
 
-        var redditPostDataList:List<RedditPost> = ArrayList() //empty list
-        val url = getRequestURL(limit,t,count,before,afterInfo.after)//preparing URL
-        var after = AfterInfo("")
-            //fetching from WEB...
-            val jsonResponse = redditPostListService.getRedditPostTopList(url)
-            //mapping  JSON to RedditPostData
-            redditPostDataList = jsonResponse.toRedditPostList()
+        var redditPostDataList:List<RedditPost>
+        var after: AfterInfo
+        //fetching from WEB...
+        val jsonResponse = retrofit
+            .create(RedditPostService::class.java)
+            .getRedditPostTopList(limit,t.value,afterInfo.after)
 
-            //saving after info TODO(refactor this place about saving AFTER locally)
-            after = AfterInfo(jsonResponse["data"]
-                .asJsonObject["after"]
-                .toString()
-                .trim('"')) ?: AfterInfo("")
+        //mapping  JSON to RedditPostData
+        redditPostDataList = jsonResponse.toRedditPostList()
+
+        //saving after info
+        after = AfterInfo(jsonResponse["data"]
+            .asJsonObject["after"]
+            .toString()
+            .trim('"'))
         /*return*/
         RedditPostRemoteDataSource.FetchedData(redditPostDataList,after)
     }
 
 }
 
-interface RedditPostService {
-    @GET
-    suspend fun getRedditPostTopList(@Url url: String?): JsonObject
-}
 
 internal fun JsonObject.toRedditPostList(): List<RedditPost> {
     val count = this["data"].asJsonObject["children"].asJsonArray.size();
@@ -110,7 +97,6 @@ internal fun JsonObject.toRedditPostList(): List<RedditPost> {
         if(getBitmapFromURL(thumbnailURL) == null) {
             thumbnailURL = "null"
         }
-
         val rData = RedditPost(title,author,createdUTC,numComments,url,subreddit,upvotes,thumbnailURL)
         dataList.add(rData)
     }

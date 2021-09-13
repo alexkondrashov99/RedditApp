@@ -5,7 +5,7 @@ import android.view.View
 import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 
-object CustomRedditSnackbar {
+object CustomRedditSnapbar {
     fun make(inflater: LayoutInflater ,view: View, text: CharSequence, duration: Int ): Snackbar{
         val snackbar = Snackbar.make(view, "", duration)
         val customSnackView = inflater.inflate(R.layout.imagesnackbar, null);
