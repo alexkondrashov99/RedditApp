@@ -1,34 +1,17 @@
 package com.example.redditapp
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.widget.NestedScrollView
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.domain.models.RedditPost
-import com.example.domain.repository.RedditPostRepository
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import androidx.recyclerview.widget.DiffUtil
-import com.example.domain.usecase.GetLocalRedditTopListUseCase
-import com.example.redditapp.di.koinModule
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.Snackbar.SnackbarLayout
-import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.context.GlobalContext.get
-import org.koin.core.parameter.ParametersHolder
 
 
 class RedditPostActivity: AppCompatActivity() {
@@ -110,7 +93,7 @@ class RedditPostActivity: AppCompatActivity() {
         }
         viewModel.errorMessage.observe(this){
             it?.let { text ->
-                CustomRedditSnackbar.make(
+                CustomRedditSnapbar.make(
                     layoutInflater,
                     findViewById(R.id.rootView),
                     text,
