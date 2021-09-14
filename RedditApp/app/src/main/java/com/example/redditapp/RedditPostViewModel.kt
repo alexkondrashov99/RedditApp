@@ -21,7 +21,13 @@ import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 import kotlin.random.Random
 
-class RedditPostViewModel (): ViewModel(), KoinComponent{
+class RedditPostViewModel (
+    private val getLocalRedditTopListUseCase:GetLocalRedditTopListUseCase,
+    private val loadRedditTopListUseCase:LoadRedditTopListUseCase,
+    private val observeAfterInfoUseCase:ObserveAfterInfoUseCase,
+    private val observeRedditTopListUseCase:ObserveRedditPostListUseCase,
+    private val refreshRedditPostListUseCase:RefreshRedditPostListUseCase
+): ViewModel() {
 
     private val fetchingDataSize = 10
     private val maxDataSize = 50
@@ -30,23 +36,6 @@ class RedditPostViewModel (): ViewModel(), KoinComponent{
     private val fetchingBefore = ""
     private var isLoading = false
     /** ------------------------------------------------------------------------------------------------- **/
-    /**      UseCases       **/
-    private val getLocalRedditTopListUseCase:GetLocalRedditTopListUseCase by inject{
-        parametersOf(viewModelScope)
-    }
-    private val loadRedditTopListUseCase:LoadRedditTopListUseCase by inject{
-        parametersOf(viewModelScope)
-    }
-    private val observeAfterInfoUseCase:ObserveAfterInfoUseCase by inject{
-        parametersOf(viewModelScope)
-    }
-    private val observeRedditTopListUseCase:ObserveRedditPostListUseCase by inject{
-        parametersOf(viewModelScope)
-    }
-    private val refreshRedditPostListUseCase:RefreshRedditPostListUseCase by inject{
-        parametersOf(viewModelScope)
-    }
-
 
     /**      LiveData       **/
     private val _listViewVisibility = MutableLiveData<Boolean>(false)
@@ -69,16 +58,15 @@ class RedditPostViewModel (): ViewModel(), KoinComponent{
     public val errorMessage: LiveData<String?>
         get() = _errorMessage
 
+//    init {
+//
+//    }
 
-    init {
-
-        //TODO(Asynchronous observing PROPERLY)
+    fun init(){
         _progressBarVisibility.value = true
         observeRedditPostList()
         observeAfterInfo()
-
     }
-
     private fun observeAfterInfo(){
         val request = Request<AfterInfo>().apply {
             onComplete = { aInfoList ->
@@ -92,7 +80,7 @@ class RedditPostViewModel (): ViewModel(), KoinComponent{
                 _listViewVisibility.value = true
             }
         }
-        observeAfterInfoUseCase.execute(request,Unit)
+        observeAfterInfoUseCase.execute(viewModelScope, request, Unit)
 
     }
     private fun observeRedditPostList(){
@@ -113,7 +101,7 @@ class RedditPostViewModel (): ViewModel(), KoinComponent{
                 _listViewVisibility.value = true
             }
         }
-        observeRedditTopListUseCase.execute(request,Unit)
+        observeRedditTopListUseCase.execute(viewModelScope, request, Unit)
 
     }
     fun loadRedditTopList() {
@@ -125,6 +113,7 @@ class RedditPostViewModel (): ViewModel(), KoinComponent{
                 _progressBarVisibility.value = true
 
                 loadRedditTopListUseCase.execute(
+                    viewModelScope,
                     LoadRedditTopListUseCase.Params(
                         limit = fetchingDataSize,
                         t = fetchingDataTime,
@@ -152,6 +141,7 @@ class RedditPostViewModel (): ViewModel(), KoinComponent{
             _listViewVisibility.value = false
 
             refreshRedditPostListUseCase.execute(
+                viewModelScope,
                 RefreshRedditPostListUseCase.Params(
                     limit = fetchingDataSize,
                     t = fetchingDataTime,

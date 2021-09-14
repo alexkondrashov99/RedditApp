@@ -8,8 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class RefreshRedditPostListUseCase(
     private val repository: RedditPostRepository,
-    coroutineScope: CoroutineScope
-): AbsBaseUseCase<Unit, RefreshRedditPostListUseCase.Params>(coroutineScope) {
+): AbsBaseUseCase<Unit, RefreshRedditPostListUseCase.Params>() {
 
     override suspend fun buildUseCase(params: Params) {
         return repository.fetchRemoteRedditPostList(

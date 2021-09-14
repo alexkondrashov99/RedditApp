@@ -9,8 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class LoadRedditTopListUseCase(
     private val repository: RedditPostRepository,
-    coroutineScope: CoroutineScope
-    ):AbsBaseUseCase<Unit,LoadRedditTopListUseCase.Params>(coroutineScope) {
+    ):AbsBaseUseCase<Unit,LoadRedditTopListUseCase.Params>() {
 
     override suspend fun buildUseCase(params: Params) {
         return repository.updateRedditPostList(

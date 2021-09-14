@@ -9,8 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class GetLocalRedditTopListUseCase(
     private val repository: RedditPostRepository,
-    coroutineScope: CoroutineScope
-    ): AbsBaseUseCase<List<RedditPost>,Unit>(coroutineScope){
+    ): AbsBaseUseCase<List<RedditPost>,Unit>(){
 
     override suspend fun buildUseCase(params: Unit): List<RedditPost> {
         return repository.getRedditPostList()

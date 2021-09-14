@@ -10,8 +10,7 @@ import kotlin.coroutines.CoroutineContext
 
 class ObserveRedditPostListUseCase(
     private val repository: RedditPostRepository,
-    coroutineScope: CoroutineScope
-): AbsFlowUseCase<List<RedditPost>, Unit>(coroutineScope) {
+): AbsFlowUseCase<List<RedditPost>, Unit>() {
 
     override fun buildUseCase(params: Unit): Flow<List<RedditPost>> {
         return repository.observeRedditPostList()

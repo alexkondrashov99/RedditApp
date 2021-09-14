@@ -9,8 +9,7 @@ import kotlin.coroutines.CoroutineContext
 
 class ObserveAfterInfoUseCase(
     private val repository: RedditPostRepository,
-    coroutineScope: CoroutineScope
-    ): AbsFlowUseCase<AfterInfo,Unit>(coroutineScope) {
+    ): AbsFlowUseCase<AfterInfo,Unit>() {
 
     override fun buildUseCase(params: Unit): Flow<AfterInfo> {
         return repository.observeRedditAfterInfo()

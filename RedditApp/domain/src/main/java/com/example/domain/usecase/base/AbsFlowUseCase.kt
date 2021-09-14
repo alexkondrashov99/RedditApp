@@ -9,11 +9,12 @@ import org.jetbrains.annotations.NotNull
 import kotlin.coroutines.CoroutineContext
 
 
-abstract class AbsFlowUseCase<Result, Params>(private val coroutineScope: CoroutineScope) {
+abstract class AbsFlowUseCase<Result, Params>() {
 
     protected abstract fun buildUseCase(@NotNull params: Params): Flow<Result>
 
     fun execute(
+        coroutineScope: CoroutineScope,
         @NotNull listener: Request<Result>,
         @NotNull params: Params,
     ) {

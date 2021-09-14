@@ -5,12 +5,12 @@ import kotlinx.coroutines.flow.*
 import org.jetbrains.annotations.NotNull
 import kotlin.coroutines.CoroutineContext
 
-abstract class AbsBaseUseCase<Result, Params>(private val coroutineScope: CoroutineScope) {
+abstract class AbsBaseUseCase<Result, Params>() {
 
     protected abstract suspend fun buildUseCase(@NotNull params: Params): Result
 
     open fun execute(
-        //coroutineScope: CoroutineScope,
+        coroutineScope: CoroutineScope,
         @NotNull params: Params,
         @NotNull listener: Request<Result>,
 

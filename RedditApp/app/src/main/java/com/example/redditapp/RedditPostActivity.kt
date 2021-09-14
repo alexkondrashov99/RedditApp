@@ -127,6 +127,8 @@ class RedditPostActivity: AppCompatActivity() {
         floatingButton.setOnClickListener {
             viewModel.refreshRedditPostList()
         }
+
+        viewModel.init()
     }
 }
 

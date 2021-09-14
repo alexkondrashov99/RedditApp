@@ -41,16 +41,16 @@ val koinModule = module {
     single<RedditPostLocalDataSource> { RedditPostLocalDataSourceImpl() }
 
 //    //Use Cases
-    //factory { GetLocalRedditTopListUseCase(get()) }
-//    factory { LoadRedditTopListUseCase(get()) }
-//    factory { ObserveRedditPostListUseCase(get()) }
-//    factory { RefreshRedditPostListUseCase(get()) }
-//    factory { ObserveAfterInfoUseCase(get()) }
-    factory { (coroutineScope : CoroutineScope) -> GetLocalRedditTopListUseCase(get(),coroutineScope)}
-    factory { (coroutineScope : CoroutineScope) -> LoadRedditTopListUseCase(get(),coroutineScope)}
-    factory { (coroutineScope : CoroutineScope) -> ObserveAfterInfoUseCase(get(),coroutineScope)}
-    factory { (coroutineScope : CoroutineScope) -> ObserveRedditPostListUseCase(get(),coroutineScope)}
-    factory { (coroutineScope : CoroutineScope) -> RefreshRedditPostListUseCase(get(),coroutineScope)}
+    factory { GetLocalRedditTopListUseCase(get()) }
+    factory { LoadRedditTopListUseCase(get()) }
+    factory { ObserveRedditPostListUseCase(get()) }
+    factory { RefreshRedditPostListUseCase(get()) }
+    factory { ObserveAfterInfoUseCase(get()) }
+//    factory { (coroutineScope : CoroutineScope) -> GetLocalRedditTopListUseCase(get(),coroutineScope)}
+//    factory { (coroutineScope : CoroutineScope) -> LoadRedditTopListUseCase(get(),coroutineScope)}
+//    factory { (coroutineScope : CoroutineScope) -> ObserveAfterInfoUseCase(get(),coroutineScope)}
+//    factory { (coroutineScope : CoroutineScope) -> ObserveRedditPostListUseCase(get(),coroutineScope)}
+//    factory { (coroutineScope : CoroutineScope) -> RefreshRedditPostListUseCase(get(),coroutineScope)}
 
 
 }
